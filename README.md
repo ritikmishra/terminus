@@ -16,7 +16,9 @@ This project is currently in an Alpha state. Please report bugs on the [Issues](
 
 4. Download this repository and save it to an easily accessible directory on your machine (e.g. ```Desktop/terminus```)
 
-5. Input: ```python Desktop/terminus/terminus.py```.
+5. Download the [anacreonlib](https://github.com/ritikmishra/anacreonlib) repository and save it to the Terminus directory (e.g. ```Desktop/terminus/anacreonlib```)
+
+6. Input: ```python Desktop/terminus/terminus.py```.
 
 ## Notes ##
 
@@ -42,9 +44,11 @@ The user is prompted to login once to their Multiverse account, after which thei
 
 **1. Purchase fleets from a Trader World:** Purhase any number of ships of any class from a Mesophon Traders Union and deploy this new fleet to a designated world.
 
+**2. Set trade routes to import 100% of demand:** Set all import trade routes for a world or trade hub to be 100% of demand, importing the maximum possible amount for each supplier world.
+
 ### Ministry of Diplomacy ###
 
-**1. Transfer fleet to a non-Imperial world:** Transfer a fleet to the world it orbits, even if the world belongs to another sovereign or is independent (i.e. a mechanism for "gifting" units to other players)
+**1. Transfer fleet to a non-Imperial world or fleet:** Transfer a fleet to the world it orbits, even if the world belongs to another sovereign or is independent (i.e. a mechanism for "gifting" units to other players). Optionally, transfer this fleet to another non-Imperial fleet orbiting the same world.
 
 **2. Send a message to all Sovereigns:** Relays a message from the player to all other players. At time of writing, the API limits this action to 120 calls per hour. Please use responsibly.
 
