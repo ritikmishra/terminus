@@ -195,12 +195,12 @@ def mergeFleets(world, mergedFleet, transfer):
     '''
     worldID = getObjID(world, getGameObj('list', 'world',))
     mergedFleetID = getObjID(mergedFleet, getGameObj('list', 'fleet',))
-    fleetIDs = getGameObj('id', 'fleet', empireName)
+    fleetIDList = getGameObj('id', 'fleet', empireName)
     worldData = getGameObj('dict', 'world').items()
     for objID, attrib in worldData:
         if objID == worldID:
             for fleet in attrib['nearObjIDs']:
-                if fleet in fleetIDs and not fleet == mergedFleetID:
+                if fleet in fleetIDList and not fleet == mergedFleetID:
                     api.disband_fleet(fleet, mergedFleetID)
     if transfer == '1':
         api.disband_fleet(mergedFleetID, worldID)
@@ -218,7 +218,7 @@ def reinforceWorld(desig, dest):
     desigList = getScenObj('list', 'designation')
     worldData = getGameObj('dict', 'world', empireName).items()
     worldList = getGameObj('list', 'world')
-    shipIDs = getScenObj('id', 'maneuveringUnit')
+    shipIDList = getScenObj('id', 'maneuveringUnit')
     deployFrom = []  # worlds to deploy from
     deployList = []  # ship ids to deploy in format ['name_1',id_1,'name_2',id_2,...]
     if desig == '1':
@@ -232,10 +232,11 @@ def reinforceWorld(desig, dest):
         if attrib['designation'] == desigID:
             deployFrom.append(objID)
         for world in deployFrom:
+            # format is [id_1,qty_1,id_2,qty_2,...]
             for ship in attrib['resources'][0::2]:
-                if ship in shipIDs and not ship in deployList:
-                    deployList.append(ship)
-                    deployList.append(999999)  # lazily deploys max possible
+                if ship in shipIDList and not ship in deployList:
+                    # lazily deploys max possible
+                    deployList.extend([ship, 999999])
     numDeployed = 0
     for world in deployFrom:
         numDeployed += 1
@@ -281,11 +282,11 @@ def msgAllSovs(msg):
     '''
     Send a msg (str) to all Sovereigns
     '''
-    sovIDs = getSovList('id')
-    for sov in sovIDs:
+    sovIDList = getSovList('id')
+    for sov in sovIDList:
         api.send_message(sov, msg)
     print('\n\tMessages successfully relayed to ' +
-          str(len(sovIDs))+' sovereigns!')
+          str(len(sovIDList))+' sovereigns!')
 
 
 def transferFleet(fleet):
@@ -316,7 +317,7 @@ def showAllSovs():
     for attrib in gameInfo['sovereigns']:
         if not attrib['id'] == api.sovID:
             sovList.append([attrib['name'], attrib['imperialMight']])
-    sovList = sorted(sovList, attrib=lambda x: x[1], reverse=True)
+    sovList = sorted(sovList, key=lambda x: x[1], reverse=True)
     numSovs = 0
     for i in range(0, len(sovList)):
         numSovs += 1
@@ -339,7 +340,7 @@ def showRivals():
                         ['[!] '+attrib['name'], attrib['imperialMight']])
                 else:
                     sovList.append([attrib['name'], attrib['imperialMight']])
-    sovList = sorted(sovList, attrib=lambda x: x[1], reverse=True)
+    sovList = sorted(sovList, key=lambda x: x[1], reverse=True)
     numRivals = 0
     for i in range(0, len(sovList)):
         numRivals += 1

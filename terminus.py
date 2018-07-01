@@ -33,15 +33,16 @@ def imperialMenu():
         [4] The Ministry of Intelligence
 
     (Input the number corresponding to the desired action, or any other value to exit)
+
     Awaiting command: ''')
 
     if action == '1':
         ministryOfWar()
-    if action == '2':
+    elif action == '2':
         ministryOfCommerce()
-    if action == '3':
+    elif action == '3':
         ministryOfDiplomacy()
-    if action == '4':
+    elif action == '4':
         ministryOfIntelligence()
     else:
         exit()
@@ -52,6 +53,7 @@ def ministryOfWar():
     action = input('''
         The Imperial Ministry of War
         ----------------------------
+
         Available orders:
 
             [1] Consolidate all fleets over a world
@@ -75,7 +77,7 @@ def ministryOfWar():
         input('\nPress Enter to return to the Ministry menu...')
         refresh()
         ministryOfWar()
-    if action == '2':
+    elif action == '2':
         clear()
         desig = input('''
         From which of our shipyards shall we deploy reinforcements?
@@ -101,6 +103,7 @@ def ministryOfCommerce():
     action = input('''
         The Imperial Ministry of Commerce
         ---------------------------------
+
         Available orders:
 
             [1] Purchase fleets from a Trader World
@@ -134,6 +137,7 @@ def ministryOfDiplomacy():
     action = input('''
         The Imperial Ministry of Diplomacy
         ----------------------------------
+
         Available orders:
 
             [1] Transfer fleet to a non-Imperial world
@@ -150,7 +154,7 @@ def ministryOfDiplomacy():
         input('\nPress Enter to return to the Ministry menu...')
         refresh()
         ministryOfDiplomacy()
-    if action == '2':
+    elif action == '2':
         clear()
         msg = input('''
         What message shall we send to all the other Sovereigns?
@@ -168,6 +172,7 @@ def ministryOfIntelligence():
     action = input('''
         The Imperial Ministry of Intelligence
         -------------------------------------
+
         Available orders:
 
             [1] Dismiss all notifications (coming soon)
@@ -180,7 +185,7 @@ def ministryOfIntelligence():
         dismissAllMsg()
         input('\nPress Enter to return to the Ministry menu...')
         ministryOfIntelligence()
-    if action == '2':
+    elif action == '2':
         clear()
         print('''
             Here is a list of all the Sovereigns in the Galaxy
@@ -189,7 +194,7 @@ def ministryOfIntelligence():
         showAllSovs()
         input('\nPress Enter to return to the Ministry menu...')
         ministryOfIntelligence()
-    if action == '3':
+    elif action == '3':
         clear()
         print('''
             Here are the Sovereigns between 50 % and 200 % of our [Imperial Might],
