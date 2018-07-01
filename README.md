@@ -16,9 +16,7 @@ This project is currently in an Alpha state. Please report bugs on the [Issues](
 
 4. Download this repository and save it to an easily accessible directory on your machine (e.g. ```Desktop/terminus```)
 
-5. Download the [anacreonlib](https://github.com/ritikmishra/anacreonlib) repository and save it to the Terminus directory (e.g. ```Desktop/terminus/anacreonlib```)
-
-6. Input: ```python Desktop/terminus/terminus.py```.
+5. Input: ```python Desktop/terminus/terminus.py```.
 
 ## Notes ##
 
