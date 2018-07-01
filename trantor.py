@@ -28,9 +28,9 @@ gameList = api.get_game_list()
 gameInfo = api.get_game_info()
 api.sovID = gameInfo['userInfo']['sovereignID']
 gameObjects = api.get_objects()
-for key in gameInfo['sovereigns']:
-    if key['id'] == api.sovID:
-        empireName = key['name']
+for attrib in gameInfo['sovereigns']:
+    if attrib['id'] == api.sovID:
+        empireName = attrib['name']
 
 # write gameInfo and gameObjects to files for reference
 f = open('gameInfo.txt', 'wb')
@@ -210,7 +210,7 @@ def mergeFleets(world, mergedFleet, transfer):
               world+' merged with '+mergedFleet+'!')
 
 
-def reinforceWorld(desig, dest,):
+def reinforceWorld(desig, dest):
     '''
     Reinforce a 'dest' (str) world from all shipyards with designation 'desig' (str)
     User-input 'desig' is mapped to one of 'jumpship yards', 'starship yards' or 'ramjet yards'
@@ -293,10 +293,10 @@ def transferFleet(fleet):
     Transfer a fleet (str) to the world it orbits
     '''
     fleetData = getGameObj('dict', 'fleet', empireName)
-    for key, val in fleetData.items():
-        if fleet == val['name']:
-            fleetID = key
-            dest = val['anchorObjID']
+    for objID, attrib in fleetData.items():
+        if fleet == attrib['name']:
+            fleetID = objID
+            dest = attrib['anchorObjID']
     api.disband_fleet(fleetID, dest)
     print('\n\t'+fleet+' successfully transferred to world!')
 
@@ -313,10 +313,10 @@ def showAllSovs():
     Return and print sorted (list) of all Sovereigns in the game
     '''
     sovList = []
-    for key in gameInfo['sovereigns']:
-        if not key['id'] == api.sovID:
-            sovList.append([key['name'], key['imperialMight']])
-    sovList = sorted(sovList, key=lambda x: x[1], reverse=True)
+    for attrib in gameInfo['sovereigns']:
+        if not attrib['id'] == api.sovID:
+            sovList.append([attrib['name'], attrib['imperialMight']])
+    sovList = sorted(sovList, attrib=lambda x: x[1], reverse=True)
     numSovs = 0
     for i in range(0, len(sovList)):
         numSovs += 1
@@ -331,14 +331,15 @@ def showRivals():
     defined as Sovereigns with 50 < imperialMight < 200
     '''
     sovList = []
-    for key in gameInfo['sovereigns']:
-        if not key['id'] == api.sovID:
-            if key['imperialMight'] > 50 and key['imperialMight'] < 200:
-                if key['imperialMight'] > 100:
-                    sovList.append(['[!] '+key['name'], key['imperialMight']])
+    for attrib in gameInfo['sovereigns']:
+        if not attrib['id'] == api.sovID:
+            if attrib['imperialMight'] > 50 and attrib['imperialMight'] < 200:
+                if attrib['imperialMight'] > 100:
+                    sovList.append(
+                        ['[!] '+attrib['name'], attrib['imperialMight']])
                 else:
-                    sovList.append([key['name'], key['imperialMight']])
-    sovList = sorted(sovList, key=lambda x: x[1], reverse=True)
+                    sovList.append([attrib['name'], attrib['imperialMight']])
+    sovList = sorted(sovList, attrib=lambda x: x[1], reverse=True)
     numRivals = 0
     for i in range(0, len(sovList)):
         numRivals += 1
