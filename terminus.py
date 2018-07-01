@@ -45,6 +45,7 @@ def imperialMenu():
     elif action == '4':
         ministryOfIntelligence()
     else:
+        clear()
         exit()
 
 
@@ -107,6 +108,7 @@ def ministryOfCommerce():
         Available orders:
 
             [1] Purchase fleets from a Trader World
+            [2] Set trade routes to import 100% of demand (coming soon)
 
         Order: ''')
     if action == '1':
@@ -127,6 +129,10 @@ def ministryOfCommerce():
         input('\nPress Enter to return to the Ministry menu...')
         refresh()
         ministryOfCommerce()
+    if action == '2':
+        clear()
+        input('\nPress Enter to return to the Ministry menu...')
+        ministryOfCommerce()
     else:
         clear()
         imperialMenu()
@@ -140,17 +146,21 @@ def ministryOfDiplomacy():
 
         Available orders:
 
-            [1] Transfer fleet to a non-Imperial world
+            [1] Transfer fleet to a non-Imperial world or fleet
             [2] Send a message to all Sovereigns
 
         Order: ''')
     if action == '1':
         clear()
-        fleet = input('''
+        gift = input('''
         What is the name of the Fleet to be transferred?
-        It will be transferred to the world it is orbiting.
         Fleet: ''')
-        transferFleet(fleet)
+        fleet = input('''
+        Where shall we transfer this fleet?
+            [1] The world it is orbiting
+            [2] Another fleet (input its name below)
+        Response: ''')
+        transferFleet(gift, fleet)
         input('\nPress Enter to return to the Ministry menu...')
         refresh()
         ministryOfDiplomacy()
@@ -175,11 +185,11 @@ def ministryOfIntelligence():
 
         Available orders:
 
-            [1] Dismiss all notifications (coming soon)
+            [1] Dismiss all notifications
             [2] Display a list of all active Sovereigns
             [3] Display the valid Rivals of our Empire
 
-        Response: ''')
+        Order: ''')
     if action == '1':
         clear()
         dismissAllMsg()

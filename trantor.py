@@ -191,17 +191,15 @@ def getShipNames():
 def mergeFleets(world, mergedFleet, transfer):
     '''
     Consolidate all fleets over a 'world' (str) to a single 'mergedFleet' (str)
-    Optionally transfer them to the world itself
+    Optionally 'transfer' (str) them to the world itself
     '''
     worldID = getObjID(world, getGameObj('list', 'world',))
     mergedFleetID = getObjID(mergedFleet, getGameObj('list', 'fleet',))
     fleetIDList = getGameObj('id', 'fleet', empireName)
-    worldData = getGameObj('dict', 'world').items()
-    for objID, attrib in worldData:
-        if objID == worldID:
-            for fleet in attrib['nearObjIDs']:
-                if fleet in fleetIDList and not fleet == mergedFleetID:
-                    api.disband_fleet(fleet, mergedFleetID)
+    worldData = getGameObj('dict', 'world')
+    for fleet in worldData.get(worldID).get('nearObjIDs'):
+        if fleet in fleetIDList and not fleet == mergedFleetID:
+            api.disband_fleet(fleet, mergedFleetID)
     if transfer == '1':
         api.disband_fleet(mergedFleetID, worldID)
         print('\n\tAll fleets in orbit transferred to '+world+'!')
@@ -275,6 +273,19 @@ def buyFleet(src, ship, qty, dest):
     print('\tTrade Union Fleet en route to '+dest+'.')
 
 
+def importAllDemands(world):
+    '''
+    Set a trade hub 'world' (str) to import 100% of demand from each of its suppliers
+    '''
+    worldList = getGameObj('list', 'world', empireName)
+    worldData = getGameObj('dict', 'world', empireName)
+    worldID = getObjID(world, worldList)
+    # 'imports' is a list in a dict in a list in a dict in a dict
+    # format is [id1,%1,id2,%2,...]
+    #for route in worldData.get(worldID).get('tradeRoutes'):
+        #for i in range(0, route.get('imports')):
+
+
 ########## MINISTRY OF DIPLOMACY ORDERS ##########
 
 
@@ -289,23 +300,34 @@ def msgAllSovs(msg):
           str(len(sovIDList))+' sovereigns!')
 
 
-def transferFleet(fleet):
+def transferFleet(gift, fleet):
     '''
-    Transfer a fleet (str) to the world it orbits
+    Transfer a 'gift' (str) fleet to the world it orbits
+    Optionally transfer to another 'fleet' (str) in orbit of the world
     '''
     fleetData = getGameObj('dict', 'fleet', empireName)
+    fleetList = getGameObj('list', 'fleet')
     for objID, attrib in fleetData.items():
-        if fleet == attrib['name']:
-            fleetID = objID
-            dest = attrib['anchorObjID']
-    api.disband_fleet(fleetID, dest)
-    print('\n\t'+fleet+' successfully transferred to world!')
+        if attrib['name'] == gift:
+            giftID = objID
+            if fleet == '1':
+                destID = attrib['anchorObjID']
+                api.disband_fleet(giftID, destID)
+                print('\n\t'+gift+' successfully transferred to world!')
+            else:
+                # todo: add checks for same name: is the fleet orbiting the same world?
+                destID = getObjID(fleet, fleetList)
+                api.disband_fleet(giftID, destID)
+                print('\n\t'+gift+' successfully transferred to '+fleet+'!')
 
 
 ########## MINISTRY OF INTELLIGENCE ORDERS ##########
 
 
 def dismissAllMsg():
+    '''
+    Clears all messages and notifications from the game client
+    '''
     return 0
 
 
