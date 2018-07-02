@@ -24,7 +24,7 @@ This project is currently in an Alpha state. Please report bugs on the [Issues](
 
 1. It is assumed that the user is playing on the latest Anacreon Beta game. At time of writing, this is the "Fallen Worlds: Era 4" scenario.
 
-2. Tt is assumed that the user inputs valid commands (at least during the project's Alpha state). For example: if a world name is inputted, and no such world exists, Terminus will crash.
+2. It is assumed that the user inputs valid commands (at least during the project's Alpha state). For example: if a world name is inputted, and no such world exists, Terminus will crash.
 
 3. It is assumed that the user refreshes the game client page after running a script. Updates occur instantaneously, but often a refresh is required to view changes in game. Alternatively, updates will also be visible after watch change when the game client updates.
 
@@ -63,7 +63,9 @@ The user is prompted to login once to their Multiverse account, after which thei
 **Dismiss all notifications:** Clears all messages and notifications from the game client screen.
 
 **Display a list of all active Sovereigns:** Print a list of all other players present in the game, sorted by relative Imperial Might, regardless if their capital has been discovered.
-    
+
+**Display a list of Sovereigns in stagnation (coming soon):** Print a list of all inactive players (defined as whose 'fleets' and 'worlds' statistics have not increased since the last update), sorted by Imperial Might.
+
 **Display the valid Rivals of our Empire:** Print a sorted list of all players within 50% and 200% of the player's Imperial Might. Sovereigns with equal or greater Imperial Might are indicated with a warning icon.
 
 ### Acknowledgement ###
