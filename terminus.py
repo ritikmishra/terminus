@@ -96,6 +96,7 @@ def ministryOfWar():
         ministryOfWar()
     else:
         clear()
+        refresh()
         imperialMenu()
 
 
@@ -118,7 +119,7 @@ def ministryOfCommerce():
         World: ''')
         print('\n\tWhat class of ships shall we purchase from '+src+'?\n')
         getShipNames()
-        ship = input('\n\t\tShip Class: ')
+        ship = input('\n\tShip Class: ')
         qty = input('''
         How many of these ships shall we purchase?
         Number of Ships: ''')
@@ -135,6 +136,7 @@ def ministryOfCommerce():
         ministryOfCommerce()
     else:
         clear()
+        refresh()
         imperialMenu()
 
 
@@ -174,6 +176,7 @@ def ministryOfDiplomacy():
         ministryOfDiplomacy()
     else:
         clear()
+        refresh()
         imperialMenu()
 
 
@@ -193,7 +196,9 @@ def ministryOfIntelligence():
     if action == '1':
         clear()
         dismissAllMsg()
+        print('\n\t All messages and notifications dismissed.')
         input('\nPress Enter to return to the Ministry menu...')
+        refresh()
         ministryOfIntelligence()
     elif action == '2':
         clear()
@@ -219,6 +224,7 @@ def ministryOfIntelligence():
         ministryOfIntelligence()
     else:
         clear()
+        refresh()
         imperialMenu()
 
 

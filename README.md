@@ -54,7 +54,7 @@ The user is prompted to login once to their Multiverse account, after which thei
 
 ### Ministry of Intelligence ###
 
-**1. Dismiss all notifications (coming soon):** Clears all messages from the game client screen.
+**1. Dismiss all notifications:** Clears all messages and notifications from the game client screen.
 
 **2. Display a list of all active Sovereigns:** Print a list of all other players present in the game, sorted by relative Imperial Might, regardless if their capital has been discovered.
     

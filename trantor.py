@@ -284,7 +284,7 @@ def importAllDemands(world):
     # format is [id1,%1,id2,%2,...]
     #for route in worldData.get(worldID).get('tradeRoutes'):
         #for i in range(0, route.get('imports')):
-
+        
 
 ########## MINISTRY OF DIPLOMACY ORDERS ##########
 
@@ -328,6 +328,9 @@ def dismissAllMsg():
     '''
     Clears all messages and notifications from the game client
     '''
+    history = api.history_dict
+    for msgID in history:
+        api.set_history_read(msgID)
     return 0
 
 
