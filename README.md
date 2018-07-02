@@ -63,7 +63,9 @@ The user is prompted to login once to their Multiverse account, after which thei
 **Dismiss all notifications:** Clears all messages and notifications from the game client screen.
 
 **Display a list of all active Sovereigns:** Print a list of all other players present in the game, sorted by relative Imperial Might, regardless if their capital has been discovered.
-    
+
+**Display a list of Sovereigns in stagnation (coming soon):** Print a list of all inactive players (defined as whose 'fleets' and 'worlds' statistics have not increased since the last update), sorted by Imperial Might.
+
 **Display the valid Rivals of our Empire:** Print a sorted list of all players within 50% and 200% of the player's Imperial Might. Sovereigns with equal or greater Imperial Might are indicated with a warning icon.
 
 ### Acknowledgement ###
