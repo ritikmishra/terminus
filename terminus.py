@@ -59,6 +59,7 @@ def ministryOfWar():
 
             [1] Consolidate all fleets over a world
             [2] Reinforce a world with fleets from shipyards
+            [3] Deploy a fleet with standing orders (coming soon)
 
         Order: ''')
     if action == '1':
@@ -74,6 +75,7 @@ def ministryOfWar():
             [1] Yes
             [2] No
         Response: ''')
+        print('\n\tFleet orders are being relayed. Please wait...')
         mergeFleets(world, mergeFleet, transfer)
         input('\nPress Enter to return to the Ministry menu...')
         refresh()
@@ -89,14 +91,18 @@ def ministryOfWar():
         dest = input('''
         To which world shall we deploy reinforcements?
         World: ''')
-        print('\n')
+        print('\n\tFleet orders are being relayed. Please wait...')
         reinforceWorld(desig, dest)
+        input('\nPress Enter to return to the Ministry menu...')
+        refresh()
+        ministryOfWar()
+    elif action == '2':
+        clear()
         input('\nPress Enter to return to the Ministry menu...')
         refresh()
         ministryOfWar()
     else:
         clear()
-        refresh()
         imperialMenu()
 
 
@@ -109,7 +115,7 @@ def ministryOfCommerce():
         Available orders:
 
             [1] Purchase fleets from a Trader World
-            [2] Set trade routes to import 100% of demand (coming soon)
+            [2] Create trade routes which import 100% of demand (coming soon)
 
         Order: ''')
     if action == '1':
@@ -117,8 +123,11 @@ def ministryOfCommerce():
         src = input('''
         From which Trader World shall we issue a Purchase Order?
         World: ''')
-        print('\n\tWhat class of ships shall we purchase from '+src+'?\n')
-        getShipNames()
+        print('''
+        What class of ships shall we purchase from '''+src+'''?
+        (The Empire has '''+str(getFunds())+''' aes funds in reserve)
+        ''')
+        getShipsForSale()
         ship = input('\n\tShip Class: ')
         qty = input('''
         How many of these ships shall we purchase?
@@ -133,10 +142,10 @@ def ministryOfCommerce():
     if action == '2':
         clear()
         input('\nPress Enter to return to the Ministry menu...')
+        refresh()
         ministryOfCommerce()
     else:
         clear()
-        refresh()
         imperialMenu()
 
 
@@ -149,7 +158,8 @@ def ministryOfDiplomacy():
         Available orders:
 
             [1] Transfer fleet to a non-Imperial world or fleet
-            [2] Send a message to all Sovereigns
+            [2] Dispatch diplomatic envoys to all Sovereign Capitals
+            [3] Send a message to all Sovereigns
 
         Order: ''')
     if action == '1':
@@ -168,6 +178,18 @@ def ministryOfDiplomacy():
         ministryOfDiplomacy()
     elif action == '2':
         clear()
+        src = input('''
+        From which world shall we dispatch envoys?
+        ''')
+        qty = input('''
+        How many ships shall we assign to each envoy fleet from '''+src+'''?
+        ''')
+        sendDiplomats(src, qty)
+        input('\nPress Enter to return to the Ministry menu...')
+        refresh()
+        ministryOfDiplomacy()
+    elif action == '3':
+        clear()
         msg = input('''
         What message shall we send to all the other Sovereigns?
         Message: ''')
@@ -176,7 +198,6 @@ def ministryOfDiplomacy():
         ministryOfDiplomacy()
     else:
         clear()
-        refresh()
         imperialMenu()
 
 
@@ -224,7 +245,6 @@ def ministryOfIntelligence():
         ministryOfIntelligence()
     else:
         clear()
-        refresh()
         imperialMenu()
 
 

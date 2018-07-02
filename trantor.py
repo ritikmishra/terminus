@@ -55,7 +55,7 @@ def refresh():
 def getObjID(objName, objList):
     '''
     Returns an object's ID (int) given its 'objName' (str) and a reference 'objList' (list)
-    Format of 'objList' is ['name_1',id_1,'name_2',id_2, ...]
+    Format of 'objList' is [['name_1',id_1], ['name_2',id_2], ...]
     '''
     for i in range(0, len(objList)):
         if objList[i][0] == objName:
@@ -65,7 +65,7 @@ def getObjID(objName, objList):
 def getObjName(objID, objList):
     '''
     Returns an object's name (str) given its 'objID' (int) and a reference 'objList' (list)
-    Format of 'objList' is ['name_1', id_1, 'name_2', id_2, ...]
+    Format of 'objList' is [['name_1', id_1], ['name_2', id_2], ...]
     '''
     for i in range(0, len(objList)):
         if objList[i][1] == objID:
@@ -76,7 +76,7 @@ def getScenObj(returnType, objCategory):
     '''
     Returns Scenario Objects (list) belonging to 'objCategory' (str)
     'returnType' (str) specifies format of returned list: 'list','id' or 'name'
-    'list' format: ['name_1', id_1, 'name_2', id_2, ...]
+    'list' format: [['name_1', id_1], ['name_2', id_2], ...]
     'id' format: [id_1, id_2, ...]
     'name' format: ['name_1', 'name_2', ...]
     '''
@@ -99,7 +99,7 @@ def getSovList(returnType):
     '''
     Returns (list) of Sovereigns from gameInfo['sovereigns']
     'returnType' (str) specifies format of returned list: 'list','id' or 'name'
-    'list' format: ['name_1', id_1, 'name_2', id_2, ...]
+    'list' format: [['name_1', id_1], ['name_2', id_2], ...]
     'id' format: [id_1, id_2, ...]
     'name' format: ['name_1', 'name_2', ...]
     '''
@@ -119,7 +119,7 @@ def getGameObj(returnType, objClass, sov=None):
     Returns Game Objects as (list) or (dict) belonging to an 'objClass' (str)
     Optionally return only objects belonging to a Sovereign 'sov'
     'returnType' (str) specifies format of returned list: 'list','id' or 'name'
-    'list' format: ['name_1', id_1, 'name_2', id_2, ...]
+    'list' format: [['name_1', id_1], ['name_2', id_2], ...]
     'id' format: [id_1, id_2, ...]
     'name' format: ['name_1', 'name_2', ...]
     '''
@@ -156,9 +156,9 @@ def getSovStat(stat, sov):
     Returns statistics (str) of a Sovereign
     'stat' specifies which stat to return: 'fleets','worlds' or 'population'
     '''
-    sovData = getSovList('list')
+    sovList = getSovList('list')
     for attrib in gameInfo['sovereigns']:
-        if attrib['id'] == getObjID(sov, sovData):
+        if attrib['id'] == getObjID(sov, sovList):
             return attrib['stats'][stat]
 
 
@@ -172,9 +172,20 @@ def getAvgEfficiency(sov):
     return totalEfficiency/getSovStat('worlds', sov)
 
 
-def getShipNames():
+def getFunds():
     '''
-    Return and print an alphabetically sorted (list) of ship names
+    Return the available aes funds (int) of the empire
+    '''
+    for attrib in gameInfo['sovereigns']:
+        if attrib['id'] == api.sovID:
+            funds = attrib['funds'][1]
+            return int(funds)
+
+
+# todo: display price of each ship per 1000 units
+def getShipsForSale():
+    '''
+    Return and print a (list) of ship names sorted by their price
     '''
     numShips = 0
     shipNames = getScenObj('name', 'maneuveringUnit')
@@ -193,8 +204,8 @@ def mergeFleets(world, mergedFleet, transfer):
     Consolidate all fleets over a 'world' (str) to a single 'mergedFleet' (str)
     Optionally 'transfer' (str) them to the world itself
     '''
-    worldID = getObjID(world, getGameObj('list', 'world',))
-    mergedFleetID = getObjID(mergedFleet, getGameObj('list', 'fleet',))
+    worldID = api.get_obj_by_name(world)['id']
+    mergedFleetID = api.get_obj_by_name(mergedFleet)['id']
     fleetIDList = getGameObj('id', 'fleet', empireName)
     worldData = getGameObj('dict', 'world')
     for fleet in worldData.get(worldID).get('nearObjIDs'):
@@ -215,7 +226,6 @@ def reinforceWorld(desig, dest):
     '''
     desigList = getScenObj('list', 'designation')
     worldData = getGameObj('dict', 'world', empireName).items()
-    worldList = getGameObj('list', 'world')
     shipIDList = getScenObj('id', 'maneuveringUnit')
     deployFrom = []  # worlds to deploy from
     deployList = []  # ship ids to deploy in format ['name_1',id_1,'name_2',id_2,...]
@@ -225,25 +235,25 @@ def reinforceWorld(desig, dest):
         desigID = getObjID('starship yards', desigList)
     if desig == '3':
         desigID = getObjID('ramjet yards', desigList)
-    destID = getObjID(dest, worldList)
+    destID = api.get_obj_by_name(dest)['id']
     for objID, attrib in worldData:
         if attrib['designation'] == desigID:
             deployFrom.append(objID)
-        for world in deployFrom:
-            # format is [id_1,qty_1,id_2,qty_2,...]
-            for ship in attrib['resources'][0::2]:
-                if ship in shipIDList and not ship in deployList:
+        # format is [id_1,qty_1,id_2,qty_2,...]
+        for worldID in deployFrom:
+            for shipID in attrib['resources'][0::2]:
+                if shipID in shipIDList and not shipID in deployList:
                     # lazily deploys max possible
-                    deployList.extend([ship, 999999])
+                    deployList.extend([shipID, 999999])
     numDeployed = 0
-    for world in deployFrom:
+    for worldID in deployFrom:
         numDeployed += 1
-        api.deploy_fleet(deployList, world)
+        api.deploy_fleet(deployList, worldID)
         api.set_fleet_destination(api.most_recent_fleet(), destID)
         api.rename_object(api.most_recent_fleet(),
                           'Reinforcement Fleet '+str(numDeployed))
         print('\tFleet '+str(numDeployed) +
-              ' deployed from '+getObjName(world, worldList))
+              ' deployed from '+api.get_obj_by_id(worldID)['name'])
     if numDeployed == 0:
         print('\n\tAn error has occurred! No fleets were deployed.')
     else:
@@ -256,15 +266,14 @@ def reinforceWorld(desig, dest):
 # todo: display max qty available to buy
 def buyFleet(src, ship, qty, dest):
     '''
-    Purchase some qty (int) of ship (str) from a src (str) Mesophon world
-    Deploy this new fleet to dest (str) world
+    Purchase some 'qty' (int) of 'ship' (str) from a 'src' (str) Mesophon world
+    Deploy this new fleet to 'dest' (str) world
     '''
-    worldList = getGameObj('list', 'world')
     shipNames = getScenObj('name', 'maneuveringUnit')
     shipNames.sort()
-    srcID = getObjID(src, worldList)
+    srcID = api.get_obj_by_name(src)['id']
+    destID = api.get_obj_by_name(dest)['id']
     shipID = getObjID(shipNames[ship], getScenObj('list', 'maneuveringUnit'))
-    destID = getObjID(dest, worldList)
     api.buy_item(srcID, shipID, qty)
     print('\n\tTrade order to purchase '+str(qty) +
           ' '+shipNames[ship]+'s relayed successfully!')
@@ -277,27 +286,11 @@ def importAllDemands(world):
     '''
     Set a trade hub 'world' (str) to import 100% of demand from each of its suppliers
     '''
-    worldList = getGameObj('list', 'world', empireName)
-    worldData = getGameObj('dict', 'world', empireName)
-    worldID = getObjID(world, worldList)
     # 'imports' is a list in a dict in a list in a dict in a dict
     # format is [id1,%1,id2,%2,...]
-    #for route in worldData.get(worldID).get('tradeRoutes'):
-        #for i in range(0, route.get('imports')):
-        
+
 
 ########## MINISTRY OF DIPLOMACY ORDERS ##########
-
-
-def msgAllSovs(msg):
-    '''
-    Send a msg (str) to all Sovereigns
-    '''
-    sovIDList = getSovList('id')
-    for sov in sovIDList:
-        api.send_message(sov, msg)
-    print('\n\tMessages successfully relayed to ' +
-          str(len(sovIDList))+' sovereigns!')
 
 
 def transferFleet(gift, fleet):
@@ -320,6 +313,49 @@ def transferFleet(gift, fleet):
                 api.disband_fleet(giftID, destID)
                 print('\n\t'+gift+' successfully transferred to '+fleet+'!')
 
+# todo: exception if unable to plot a course
+def sendDiplomats(src, qty):
+    '''
+    Deploys fleets of some 'qty' (int) of either Vanguard or Helion explorers
+    Deployed from 'src' (str) world to every other Sovereign Capital
+    '''
+    capitalsList = []
+    capDesigIDList = []
+    deployList = []
+    shipList = getScenObj('list', 'maneuveringUnit')
+    desigList = getScenObj('list', 'designation')
+    for i in range(0, len(desigList)):
+        if desigList[i][0] == 'capital':
+            capDesigIDList.append(desigList[i][1])
+    for objID, attrib in getGameObj('dict', 'world').items():
+        if attrib['designation'] in capDesigIDList and not attrib['sovereignID'] == api.sovID:
+            capitalsList.append(objID)
+    srcID = api.get_obj_by_name(src)['id']
+    srcData = api.get_obj_by_name(src).items()
+    for attrib, val in srcData:
+        if attrib == 'resources':
+            for shipID in val[0::2]:
+                if shipID == getObjID('Helion-class explorer', shipList) or shipID == getObjID('Vanguard-class explorer', shipList):
+                    deployList.extend([shipID,qty])
+    numDeployed = 0
+    for destID in capitalsList:
+        numDeployed += 1
+        api.deploy_fleet(deployList,srcID)
+        api.set_fleet_destination(api.most_recent_fleet(),destID)
+        api.rename_object(api.most_recent_fleet(),empireName+' Envoy')
+    print('\n\t'+numDeployed+' envoy fleets dispatched from '+src+'!')
+
+
+def msgAllSovs(msg):
+    '''
+    Send a 'msg' (str) to all Sovereigns
+    '''
+    sovIDList = getSovList('id')
+    for sov in sovIDList:
+        api.send_message(sov, msg)
+    print('\n\tMessages successfully relayed to ' +
+          str(len(sovIDList))+' sovereigns!')
+
 
 ########## MINISTRY OF INTELLIGENCE ORDERS ##########
 
@@ -328,10 +364,8 @@ def dismissAllMsg():
     '''
     Clears all messages and notifications from the game client
     '''
-    history = api.history_dict
-    for msgID in history:
+    for msgID in api.history_dict:
         api.set_history_read(msgID)
-    return 0
 
 
 def showAllSovs():
@@ -340,7 +374,7 @@ def showAllSovs():
     '''
     sovList = []
     for attrib in gameInfo['sovereigns']:
-        if not attrib['id'] == api.sovID:
+        if not attrib['id'] == api.sovID and attrib['imperialMight'] > 0:
             sovList.append([attrib['name'], attrib['imperialMight']])
     sovList = sorted(sovList, key=lambda x: x[1], reverse=True)
     numSovs = 0

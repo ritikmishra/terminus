@@ -24,9 +24,11 @@ This project is currently in an Alpha state. Please report bugs on the [Issues](
 
 1. It is assumed that the user is playing on the latest Anacreon Beta game. At time of writing, this is the "Fallen Worlds: Era 4" scenario.
 
-2. In the project's Alpha state, it is assumed that the user inputs valid commands. For example: if a world name is inputted, and no such world exists, Terminus will crash.
+2. Tt is assumed that the user inputs valid commands (at least during the project's Alpha state). For example: if a world name is inputted, and no such world exists, Terminus will crash.
 
-3. It is assumed that the user does not use the scripts provided with malicious intent.
+3. It is assumed that the user refreshes the game client page after running a script. Updates occur instantaneously, but often a refresh is required to view changes in game. Alternatively, updates will also be visible after watch change when the game client updates.
+
+4. It is assumed that the user does not use the scripts provided with malicious intent.
 
 ## Features ##
 
@@ -36,29 +38,33 @@ The user is prompted to login once to their Multiverse account, after which thei
 
 ### Ministry of War ###
 
-**1. Consolidate all fleets over a world:** Transfers all fleets belonging to the player to a single one. Optionally, also transfer this merged fleet down to the world the individual fleets were previously orbiting.
+**Consolidate all fleets over a world:** Transfers all fleets belonging to the player to a single one. Optionally, also transfer this merged fleet down to the world the individual fleets were previously orbiting.
 
-**2. Reinforce a world with fleets from shipyards:** Deploy all units from each one of either: jumpship yards, starship yards or ramjet yards belonging to the player. Send each of these reinforcement fleets to a designated world.
+**Reinforce a world with fleets from shipyards:** Deploy all units from each one of either: jumpship yards, starship yards or ramjet yards belonging to the player. Send each of these reinforcement fleets to a designated world.
+
+**Deploy a fleet with standing orders (coming soon):** Deploy a fleet which will perform an action (at present, either "attack" or "invade") upon arrival at its destination. Requires script to keep running for at least as long as the fleet's transit time.
 
 ### Ministry of Commerce ###
 
-**1. Purchase fleets from a Trader World:** Purhase any number of ships of any class from a Mesophon Traders Union and deploy this new fleet to a designated world.
+**Purchase fleets from a Trader World:** Purhase any number of ships of any class from a Mesophon Traders Union and deploy this new fleet to a designated world.
 
-**2. Set trade routes to import 100% of demand:** Set all import trade routes for a world or trade hub to be 100% of demand, importing the maximum possible amount for each supplier world.
+**Create trade routes to import 100% of demand (coming soon):** Create new import trade routes for a world or trade hub to be 100% of demand, importing the maximum possible amount for each supplier world within a 200 LY radius.
 
 ### Ministry of Diplomacy ###
 
-**1. Transfer fleet to a non-Imperial world or fleet:** Transfer a fleet to the world it orbits, even if the world belongs to another sovereign or is independent (i.e. a mechanism for "gifting" units to other players). Optionally, transfer this fleet to another non-Imperial fleet orbiting the same world.
+**Transfer fleet to a non-Imperial world or fleet:** Transfer a fleet to the world it orbits, even if the world belongs to another sovereign or is independent (i.e. a mechanism for "gifting" units to other players). Optionally, transfer this fleet to another non-Imperial fleet orbiting the same world.
 
-**2. Send a message to all Sovereigns:** Relays a message from the player to all other players. At time of writing, the API limits this action to 120 calls per hour. Please use responsibly.
+**Dispatch diplomatic envoys to all Sovereign Capitals:** Deploys small fleets of explorers from an "embassy" world, to be sent to the Capital Worlds of all discovered Sovereigns. Note: this is common practice among players in the current meta.
+
+**Send a message to all Sovereigns:** Relays a message from the player to all other players. At time of writing, the API limits this action to 120 calls per hour. Please use responsibly.
 
 ### Ministry of Intelligence ###
 
-**1. Dismiss all notifications:** Clears all messages and notifications from the game client screen.
+**Dismiss all notifications:** Clears all messages and notifications from the game client screen.
 
-**2. Display a list of all active Sovereigns:** Print a list of all other players present in the game, sorted by relative Imperial Might, regardless if their capital has been discovered.
+**Display a list of all active Sovereigns:** Print a list of all other players present in the game, sorted by relative Imperial Might, regardless if their capital has been discovered.
     
-**3. Display the valid Rivals of our Empire:** Print a sorted list of all players within 50% and 200% of the player's Imperial Might. Sovereigns with equal or greater Imperial Might are indicated with a warning icon.
+**Display the valid Rivals of our Empire:** Print a sorted list of all players within 50% and 200% of the player's Imperial Might. Sovereigns with equal or greater Imperial Might are indicated with a warning icon.
 
 ### Acknowledgement ###
 
