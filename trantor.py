@@ -1,4 +1,5 @@
 from anacreonlib import Anacreon
+from anacreonlib.exceptions import HexArcException
 import pprint
 
 
@@ -247,21 +248,27 @@ def reinforceWorld(desig, dest):
                     deployList.extend([shipID, 999999])
     numDeployed = 0
     for worldID in deployFrom:
+        try:
+            api.deploy_fleet(deployList, worldID)
+            api.set_fleet_destination(api.most_recent_fleet(), destID)
+        except HexArcException:
+            print('\tERROR: Unable to deploy fleet from ' +
+                  api.get_obj_by_id(worldID)['name']+' to '+dest)
+            continue
         numDeployed += 1
-        api.deploy_fleet(deployList, worldID)
-        api.set_fleet_destination(api.most_recent_fleet(), destID)
         api.rename_object(api.most_recent_fleet(),
                           'Reinforcement Fleet '+str(numDeployed))
         print('\tFleet '+str(numDeployed) +
               ' deployed from '+api.get_obj_by_id(worldID)['name'])
     if numDeployed == 0:
-        print('\n\tAn error has occurred! No fleets were deployed.')
+        print('\n\tERROR: No fleets were successfully deployed!')
     else:
         print('\n\tOrders for '+str(numDeployed) +
               ' fleets to reinforce '+dest+' relayed successfully!')
 
 
 ########## MINISTRY OF COMMERCE ORDERS ##########
+
 
 # todo: display max qty available to buy
 def buyFleet(src, ship, qty, dest):
@@ -282,12 +289,34 @@ def buyFleet(src, ship, qty, dest):
     print('\tTrade Union Fleet en route to '+dest+'.')
 
 
-def importAllDemands(world):
+def makeTradeRoutes(world):
     '''
     Set a trade hub 'world' (str) to import 100% of demand from each of its suppliers
     '''
     # 'imports' is a list in a dict in a list in a dict in a dict
     # format is [id1,%1,id2,%2,...]
+
+
+def buildSpaceports():
+    def getStructures(worldObj):
+        structureIDList = []
+        for traitID in attrib['traits']:
+            if type(traitID) is int:
+                structureIDList.append(traitID)
+            else:
+                structureIDList.append(traitID['traitID'])
+        return structureIDList
+    improvementList = getScenObj('list', 'improvement')
+    spaceportID = getObjID('spaceport', improvementList)
+    starportID = getObjID('starport', improvementList)
+    worldData = getGameObj('dict', 'world', empireName)
+    for objID, attrib in worldData.items():
+        if attrib['techLevel'] >= 5:
+            structureIDList = getStructures(attrib['traits'])
+            if spaceportID not in structureIDList and starportID not in structureIDList:
+                api.build_improvement(objID, spaceportID)
+                print('Spaceport construction started ' +
+                      api.get_obj_by_id(objID)['name'])
 
 
 ########## MINISTRY OF DIPLOMACY ORDERS ##########
@@ -313,6 +342,7 @@ def transferFleet(gift, fleet):
                 api.disband_fleet(giftID, destID)
                 print('\n\t'+gift+' successfully transferred to '+fleet+'!')
 
+
 # todo: exception if unable to plot a course
 def sendDiplomats(src, qty):
     '''
@@ -336,13 +366,14 @@ def sendDiplomats(src, qty):
         if attrib == 'resources':
             for shipID in val[0::2]:
                 if shipID == getObjID('Helion-class explorer', shipList) or shipID == getObjID('Vanguard-class explorer', shipList):
-                    deployList.extend([shipID,qty])
+                    deployList.extend([shipID, qty])
     numDeployed = 0
     for destID in capitalsList:
         numDeployed += 1
-        api.deploy_fleet(deployList,srcID)
-        api.set_fleet_destination(api.most_recent_fleet(),destID)
-        api.rename_object(api.most_recent_fleet(),empireName+' Envoy')
+        api.deploy_fleet(deployList, srcID)
+        api.set_fleet_destination(api.most_recent_fleet(), destID)
+        api.rename_object(api.most_recent_fleet(), empireName+' Envoy')
+        print('Envoy Fleet '+str(numDeployed)+' deployed from '+src)
     print('\n\t'+numDeployed+' envoy fleets dispatched from '+src+'!')
 
 

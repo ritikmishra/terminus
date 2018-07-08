@@ -63,6 +63,7 @@ def ministryOfWar():
 
         Order: ''')
     if action == '1':
+        refresh()
         clear()
         world = input('''
         Over which world shall we merge all orbiting fleets?
@@ -75,12 +76,18 @@ def ministryOfWar():
             [1] Yes
             [2] No
         Response: ''')
-        print('\n\tFleet orders are being relayed. Please wait...')
-        mergeFleets(world, mergeFleet, transfer)
+        print('\n\tFleet orders are being relayed. Please wait...\n')
+        try:
+            mergeFleets(world, mergeFleet, transfer)
+        except (NameError, ValueError):
+            input('''
+            ERROR: Unable to locate object with that name!
+            Press Enter to continue...''')
+            ministryOfWar()
         input('\nPress Enter to return to the Ministry menu...')
-        refresh()
         ministryOfWar()
     elif action == '2':
+        refresh()
         clear()
         desig = input('''
         From which of our shipyards shall we deploy reinforcements?
@@ -91,15 +98,21 @@ def ministryOfWar():
         dest = input('''
         To which world shall we deploy reinforcements?
         World: ''')
-        print('\n\tFleet orders are being relayed. Please wait...')
-        reinforceWorld(desig, dest)
+        print('\n\tFleet orders are being relayed. Please wait...\n')
+        try:
+            reinforceWorld(desig, dest)
+        except (NameError, ValueError):
+            input('''
+            ERROR: Unable to locate object with that name!
+            Press Enter to continue...''')
+            ministryOfWar()
         input('\nPress Enter to return to the Ministry menu...')
-        refresh()
         ministryOfWar()
-    elif action == '2':
+    elif action == '3':
+        refresh()
         clear()
         input('\nPress Enter to return to the Ministry menu...')
-        refresh()
+
         ministryOfWar()
     else:
         clear()
@@ -116,9 +129,11 @@ def ministryOfCommerce():
 
             [1] Purchase fleets from a Trader World
             [2] Create trade routes which import 100% of demand (coming soon)
+            [3] Build spaceports on all Imperial worlds
 
         Order: ''')
     if action == '1':
+        refresh()
         clear()
         src = input('''
         From which Trader World shall we issue a Purchase Order?
@@ -135,14 +150,26 @@ def ministryOfCommerce():
         dest = input('''
         To which world shall we deploy this new Trade Union Fleet?
         World: ''')
-        buyFleet(src, int(ship)-1, int(qty), dest)
+        try:
+            buyFleet(src, int(ship)-1, int(qty), dest)
+        except (NameError, ValueError):
+            input('''
+            ERROR: Unable to locate object with that name!
+            Press Enter to continue...''')
+            ministryOfCommerce()
         input('\nPress Enter to return to the Ministry menu...')
-        refresh()
         ministryOfCommerce()
     if action == '2':
+        refresh()
         clear()
         input('\nPress Enter to return to the Ministry menu...')
+        ministryOfCommerce()
+    if action == '3':
         refresh()
+        clear()
+        print('\tRelaying construction orders. Please wait...\n')
+        buildSpaceports()
+        input('\nPress Enter to return to the Ministry menu...')
         ministryOfCommerce()
     else:
         clear()
@@ -163,6 +190,7 @@ def ministryOfDiplomacy():
 
         Order: ''')
     if action == '1':
+        refresh()
         clear()
         gift = input('''
         What is the name of the Fleet to be transferred?
@@ -172,23 +200,35 @@ def ministryOfDiplomacy():
             [1] The world it is orbiting
             [2] Another fleet (input its name below)
         Response: ''')
-        transferFleet(gift, fleet)
+        print('\n\tFleet orders are being relayed. Please wait...\n')
+        try:
+            transferFleet(gift, fleet)
+        except (NameError, ValueError):
+            input('''
+            ERROR: Unable to locate object with that name!
+            Press Enter to continue...''')
         input('\nPress Enter to return to the Ministry menu...')
-        refresh()
         ministryOfDiplomacy()
     elif action == '2':
+        refresh()
         clear()
         src = input('''
         From which world shall we dispatch envoys?
-        ''')
+        World: ''')
         qty = input('''
-        How many ships shall we assign to each envoy fleet from '''+src+'''?
-        ''')
-        sendDiplomats(src, qty)
+        How many explorer vessels shall we assign to each envoy fleet from '''+src+'''?
+        Number: ''')
+        print('\n\tFleet orders are being relayed. Please wait...\n')
+        try:
+            sendDiplomats(src, int(qty))
+        except (NameError, ValueError):
+            input('''
+            ERROR: Unable to locate object with that name!
+            Press Enter to continue...''')
         input('\nPress Enter to return to the Ministry menu...')
-        refresh()
         ministryOfDiplomacy()
     elif action == '3':
+        refresh()
         clear()
         msg = input('''
         What message shall we send to all the other Sovereigns?
@@ -215,13 +255,14 @@ def ministryOfIntelligence():
 
         Order: ''')
     if action == '1':
+        refresh()
         clear()
         dismissAllMsg()
         print('\n\t All messages and notifications dismissed.')
         input('\nPress Enter to return to the Ministry menu...')
-        refresh()
         ministryOfIntelligence()
     elif action == '2':
+        refresh()
         clear()
         print('''
             Here is a list of all the Sovereigns in the Galaxy
@@ -231,6 +272,7 @@ def ministryOfIntelligence():
         input('\nPress Enter to return to the Ministry menu...')
         ministryOfIntelligence()
     elif action == '3':
+        refresh()
         clear()
         print('''
             Here are the Sovereigns between 50 % and 200 % of our [Imperial Might],

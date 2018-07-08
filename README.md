@@ -50,6 +50,8 @@ The user is prompted to login once to their Multiverse account, after which thei
 
 **Create trade routes to import 100% of demand (coming soon):** Create new import trade routes for a world or trade hub to be 100% of demand, importing the maximum possible amount for each supplier world within a 200 LY radius.
 
+**Build spaceports on all Imperial worlds:** As described, starts construction of a spaceport on all owned worlds which are at or above TL5 (spacefaring) that still don't have one.
+
 ### Ministry of Diplomacy ###
 
 **Transfer fleet to a non-Imperial world or fleet:** Transfer a fleet to the world it orbits, even if the world belongs to another sovereign or is independent (i.e. a mechanism for "gifting" units to other players). Optionally, transfer this fleet to another non-Imperial fleet orbiting the same world.
