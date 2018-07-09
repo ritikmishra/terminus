@@ -29,6 +29,7 @@ gameList = api.get_game_list()
 gameInfo = api.get_game_info()
 api.sovID = gameInfo['userInfo']['sovereignID']
 gameObjects = api.get_objects()
+pricesCache = None
 for attrib in gameInfo['sovereigns']:
     if attrib['id'] == api.sovID:
         empireName = attrib['name']
@@ -149,6 +150,23 @@ def getGameObj(returnType, objClass, sov=None):
         return objList
 
 
+def getPrices():
+    global pricesCache
+    if pricesCache is None:
+        for sovereign in gameInfo["sovereigns"]:
+            if sovereign["name"] == "Mesophon Traders Union":
+                pricesCache = {}
+                price_list = None
+                for trait in sovereign["traits"]:
+                    if type(trait) == dict:
+                        if "sellPrices" in trait.keys():
+                            price_list = trait["sellPrices"]
+                for i, typeID in enumerate(price_list[::2]):
+                    price = price_list[2 * i + 1]
+                    pricesCache[typeID] = price
+
+    return pricesCache
+
 ########### UTILITY FUNCTIONS ##########
 
 
@@ -183,18 +201,22 @@ def getFunds():
             return int(funds)
 
 
-# todo: display price of each ship per 1000 units
 def getShipsForSale():
     """
     Return and print a (list) of ship names sorted by their price
     """
     numShips = 0
-    shipNames = getScenObj('name', 'maneuveringUnit')
-    shipNames.sort()
-    for ship in shipNames:
+    ships = getScenObj('list', 'maneuveringUnit')
+    priceDict = getPrices()
+    ships.sort(key=lambda x: priceDict[x[1]])
+
+    funds_available = getFunds()
+
+    for shipName, shipID in ships:
         numShips += 1
-        print('\t\t['+str(numShips)+'] '+ship)
-    return shipNames
+        price_per_ship = priceDict[shipID]
+        print('\t\t[' + str(numShips) + '] ' + shipName, "(Price per ship:", price_per_ship, "aes) (Max Qty:", funds_available // price_per_ship, "ships)")
+    return [x[0] for x in ships]
 
 
 ########## MINISTRY OF WAR ORDERS ##########
@@ -270,14 +292,17 @@ def reinforceWorld(desig, dest):
 ########## MINISTRY OF COMMERCE ORDERS ##########
 
 
-# todo: display max qty available to buy
 def buyFleet(src, ship, qty, dest):
     """
     Purchase some 'qty' (int) of 'ship' (str) from a 'src' (str) Mesophon world
     Deploy this new fleet to 'dest' (str) world
     """
-    shipNames = getScenObj('name', 'maneuveringUnit')
-    shipNames.sort()
+
+    ships = getScenObj('list', 'maneuveringUnit')
+    priceDict = getPrices()
+    ships.sort(key=lambda x: priceDict[x[1]])
+
+    shipNames = [name for name, id in ships]
     srcID = api.get_obj_by_name(src)['id']
     destID = api.get_obj_by_name(dest)['id']
     shipID = getObjID(shipNames[ship], getScenObj('list', 'maneuveringUnit'))
